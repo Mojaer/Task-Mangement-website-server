@@ -8,7 +8,7 @@ app.use(cors());
 require('dotenv').config()
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_ACC}:${process.env.DB_PASS}@cluster0.8odccbh.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -37,8 +37,17 @@ async function MongoRun() {
         //post request to add task to the collection
         app.post('/task', async (req, res) => {
             const task = req.body
+            // console.log(task)
             const result = await taskCollection.insertOne(task)
             res.send(result);
+        })
+
+        //delete task 
+        app.delete('/task/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: new ObjectId(id) }
+            const result = await taskCollection.deleteOne(query)
+            res.send(result)
         })
 
 
