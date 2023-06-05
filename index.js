@@ -42,6 +42,43 @@ async function MongoRun() {
             res.send(result);
         })
 
+        //update full task 
+        app.patch('/task/:id', async (req, res) => {
+            const id = req.params.id
+            const task = req.body
+
+            // console.log(id, task)
+            const filter = { _id: new ObjectId(id) }
+
+            const updateTask = {
+                $set: {
+                    title: task.title,
+                    description: task.description,
+                    status: task.status,
+                    duration: task.duration
+                },
+            };
+            const result = await taskCollection.updateOne(filter, updateTask)
+            res.send(result)
+        })
+
+        //update status
+        app.patch('/task/status/:id', async (req, res) => {
+            const id = req.params.id
+            const status = req.body
+
+            // console.log(id, status)
+            const filter = { _id: new ObjectId(id) }
+
+            const updateTask = {
+                $set: {
+                    status: status.status,
+                },
+            };
+            const result = await taskCollection.updateOne(filter, updateTask)
+            res.send(result)
+        })
+
         //delete task 
         app.delete('/task/:id', async (req, res) => {
             const id = req.params.id
